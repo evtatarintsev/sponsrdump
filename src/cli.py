@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 
 import click
@@ -20,9 +21,15 @@ def cli() -> None:
 @click.option('--auth', "-a", required=True, type=click.Path(exists=True, file_okay=True, dir_okay=False))
 def video(url: str, dest_dir: str, auth: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
-    SponsrGrabber(
+    asyncio.run(save_video(url, dest_dir, auth))
+
+
+async def save_video(url: str, dest_dir: str, auth: str) -> None:
+    """Сохраняет видео по указанному url в директорию dest."""
+    post = await SponsrGrabber(
         SponsrAuth(Path(auth))
     ).post(url)
+    click.echo(post.html)
 
 
 if __name__ == '__main__':

@@ -1,3 +1,5 @@
+import httpx
+
 from sponsr.sponsr_auth import SponsrAuth
 from sponsr.sponsr_post import SponsrPost
 
@@ -17,7 +19,9 @@ class SponsrGrabber:
     }
 
     def __init__(self, auth: SponsrAuth) -> None:
-        self.auth = auth
+        self.cookie = auth.cookie()
 
-    def post(self, url: str) -> SponsrPost:
-        return SponsrPost("")
+    async def post(self, url: str) -> SponsrPost:
+        async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
+            response = await client.get(url)
+            return SponsrPost(response.text)

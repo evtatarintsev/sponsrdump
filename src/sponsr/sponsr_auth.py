@@ -8,6 +8,9 @@ class Cookie:
     key: str
     value: str
 
+    def as_dict(self) -> dict[str, str]:
+        return {self.key: self.value}
+
 
 class SponsrAuth:
     def __init__(self, session_file: Path) -> None:
