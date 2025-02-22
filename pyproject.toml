@@ -26,3 +26,7 @@ minversion = "6.0"
 testpaths = [
     "tests"
 ]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
