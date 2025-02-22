@@ -13,12 +13,12 @@ class SponsrPostPreview:
         soup = BeautifulSoup(self.html)
         mpds = []
         iframes_src = [f["src"] for f in soup.find_all("iframe")]
-        video_src = [ src for src in iframes_src if "video" in src]
+        video_src = [src for src in iframes_src if "video" in src]
 
         for src in video_src:
-            file_id = parse_qs(urlparse(src).query).get('video_id')
-            if file_id:
+            query_file_id = parse_qs(urlparse(src).query).get('video_id')
+            if query_file_id:
                 # workaround bogus links like /post/video/?video_id=xxx?poster_id=yyy
-                file_id = file_id[0].partition('?')[0]
+                file_id = query_file_id[0].partition('?')[0]
                 mpds.append(f"https://kinescope.io/{file_id}/master.mpd")
         return mpds
