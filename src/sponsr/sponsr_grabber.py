@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, fields
+from typing import Any
 
 import httpx
 
@@ -13,11 +16,11 @@ class SponsrPostsApiPost:
     post_text: str
     post_title: str
 
-    @classmethod
-    def from_dict(cls, data):
-        field_names = {f.name for f in fields(cls)}
+    @staticmethod
+    def from_dict(data: dict[str, Any]) -> SponsrPostsApiPost:
+        field_names = {f.name for f in fields(SponsrPostsApiPost)}
         filtered_data = {k: v for k, v in data.items() if k in field_names}
-        return cls(**filtered_data)
+        return SponsrPostsApiPost(**filtered_data)
 
 
 class SponsrGrabber:
@@ -37,17 +40,12 @@ class SponsrGrabber:
     def __init__(self, auth: SponsrAuth) -> None:
         self.cookie = auth.cookie()
 
-    async def post(self, url: str) -> SponsrPostPreview:
-        async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
-            response = await client.get(url)
-            return SponsrPostPreview(response.text)
-
     async def posts(self, url: str) -> list[SponsrPostPreview]:
         async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
             response = await client.get(url)
             project_id = SponsrProjectPage(response.text).project_id()
 
-        posts = []
+        posts: list[SponsrPostsApiPost] = []
         total_posts = 1
 
         async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
