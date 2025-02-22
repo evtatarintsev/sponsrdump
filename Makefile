@@ -8,3 +8,6 @@ build:
 
 run: build
 	docker run -it -v $(WORKDIR)/sponsrdump_auth.txt:/sponsrdump_auth.txt -v $(WORKDIR)/sponsrdump.json:/sponsrdump.json -v $(WORKDIR)/dump:/dump sponsrdump
+
+test:
+	pytest
