@@ -1,7 +1,23 @@
+from dataclasses import dataclass, fields
+
 import httpx
 
 from sponsr.sponsr_auth import SponsrAuth
-from sponsr.sponsr_post import SponsrPost
+from sponsr.sponsr_post import SponsrPostPreview
+from sponsr.sponsr_project import SponsrProjectPage
+
+
+@dataclass
+class SponsrPostsApiPost:
+    post_id: int
+    post_text: str
+    post_title: str
+
+    @classmethod
+    def from_dict(cls, data):
+        field_names = {f.name for f in fields(cls)}
+        filtered_data = {k: v for k, v in data.items() if k in field_names}
+        return cls(**filtered_data)
 
 
 class SponsrGrabber:
@@ -21,7 +37,24 @@ class SponsrGrabber:
     def __init__(self, auth: SponsrAuth) -> None:
         self.cookie = auth.cookie()
 
-    async def post(self, url: str) -> SponsrPost:
+    async def post(self, url: str) -> SponsrPostPreview:
         async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
             response = await client.get(url)
-            return SponsrPost(response.text)
+            return SponsrPostPreview(response.text)
+
+    async def posts(self, url: str) -> list[SponsrPostPreview]:
+        async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
+            response = await client.get(url)
+            project_id = SponsrProjectPage(response.text).project_id()
+
+        posts = []
+        total_posts = 1
+
+        async with httpx.AsyncClient(headers=self.headers, cookies=self.cookie.as_dict()) as client:
+            while len(posts) < total_posts:
+                response = await client.get(f"https://sponsr.ru/project/{project_id}/more-posts/?offset={len(posts)}")
+                data = response.json()["response"]
+                total_posts = data["rows_count"]
+                posts += [SponsrPostsApiPost.from_dict(d) for d in data["rows"]]
+
+        return [SponsrPostPreview(post.post_title, post.post_text) for post in posts]

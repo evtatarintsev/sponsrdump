@@ -5,7 +5,7 @@ import click
 
 from sponsr.sponsr_auth import SponsrAuth
 from sponsr.sponsr_grabber import SponsrGrabber
-from sponsr.sponsr_post import SponsrPost
+from sponsr.sponsr_post import SponsrPostPreview
 
 
 @click.group("dump")
@@ -26,10 +26,11 @@ def video(url: str, dest_dir: str, auth: str) -> None:
 
 async def save_video(url: str, dest_dir: str, auth: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
-    post = await SponsrGrabber(
+    posts = await SponsrGrabber(
         SponsrAuth(Path(auth))
-    ).post(url)
-    click.echo(post.html)
+    ).posts(url)
+
+    click.echo(posts)
 
 
 if __name__ == '__main__':

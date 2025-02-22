@@ -1,6 +1,7 @@
 from typing import Final
 
 
-class SponsrPost:
-    def __init__(self, html: str) -> None:
+class SponsrPostPreview:
+    def __init__(self, title: str, html: str) -> None:
+        self.title: Final[str] = title
         self.html: Final[str] = html
