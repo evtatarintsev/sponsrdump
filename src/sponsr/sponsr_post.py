@@ -9,7 +9,7 @@ class SponsrPostPreview:
         self.title: Final[str] = title
         self.html: Final[str] = html
 
-    def kinescope(self) -> list[str]:
+    def video_ids(self) -> list[str]:
         soup = BeautifulSoup(self.html)
         mpds = []
         iframes_src = [f["src"] for f in soup.find_all("iframe")]
@@ -20,5 +20,5 @@ class SponsrPostPreview:
             if query_file_id:
                 # workaround bogus links like /post/video/?video_id=xxx?poster_id=yyy
                 file_id = query_file_id[0].partition('?')[0]
-                mpds.append(f"https://kinescope.io/{file_id}/master.mpd")
+                mpds.append(file_id)
         return mpds

@@ -1,8 +1,12 @@
 import asyncio
+import tempfile
 from pathlib import Path
 
 import click
 
+from downloader import Downloader
+from ffmpeg.ffmpeg import FFmpeg
+from kinescope.kinescope import Kinescope, KinescopeQuality
 from sponsr.sponsr_auth import SponsrAuth
 from sponsr.sponsr_grabber import SponsrGrabber
 from sponsr.sponsr_post import SponsrPostPreview
@@ -21,16 +25,23 @@ def cli() -> None:
 @click.option('--auth', "-a", required=True, type=click.Path(exists=True, file_okay=True, dir_okay=False))
 def video(url: str, dest_dir: str, auth: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
-    asyncio.run(save_video(url, dest_dir, auth))
+    asyncio.run(save_video(url, Path(dest_dir), auth))
 
 
-async def save_video(url: str, dest_dir: str, auth: str) -> None:
+async def save_video(url: str, dest_dir: Path, auth: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
-    posts = await SponsrGrabber(
-        SponsrAuth(Path(auth))
-    ).posts(url)
-
-    click.echo(posts)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        await Downloader(
+            SponsrGrabber(
+                SponsrAuth(Path(auth))
+            ),
+            Kinescope(
+                KinescopeQuality.THE_BEST,
+                Path(temp_dir)
+            ),
+            FFmpeg(),
+            dest_dir,
+        ).download(url)
 
 
 if __name__ == '__main__':
