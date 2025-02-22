@@ -25,13 +25,8 @@ def cli() -> None:
 @click.option('--auth', "-a", required=True, type=click.Path(exists=True, file_okay=True, dir_okay=False))
 def video(url: str, dest_dir: str, auth: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
-    asyncio.run(save_video(url, Path(dest_dir), auth))
-
-
-async def save_video(url: str, dest_dir: Path, auth: str) -> None:
-    """Сохраняет видео по указанному url в директорию dest."""
     with tempfile.TemporaryDirectory() as temp_dir:
-        await Downloader(
+        downloader = Downloader(
             SponsrGrabber(
                 SponsrAuth(Path(auth))
             ),
@@ -40,8 +35,9 @@ async def save_video(url: str, dest_dir: Path, auth: str) -> None:
                 Path(temp_dir)
             ),
             FFmpeg(),
-            dest_dir,
-        ).download(url)
+            Path(dest_dir),
+        )
+        asyncio.run(downloader.download(url))
 
 
 if __name__ == '__main__':
