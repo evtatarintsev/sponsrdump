@@ -20,7 +20,16 @@ class Downloader:
         return self.dest_dir / filename
 
     async def download(self, url: str) -> None:
-        for post in await self.grabber.posts(url):
+        print("Начинаем скачивание материалов")
+        try:
+            posts = await self.grabber.posts(url)
+        except Exception as e:
+            print("Не удалось получить список постов в проекте")
+            return
+
+        for post in posts:
+            print(f"Скачиваем '{post.title}'...")
             for i, video_id in enumerate(post.video_ids()):
                 downloads = await self.kinescope.download(video_id)
                 self.ffmpeg.concat(downloads.video, downloads.audio, self.filename(post, i))
+            print(f"'{post.title}' скачан.")
