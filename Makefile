@@ -11,3 +11,6 @@ run: build
 
 test:
 	pytest
+
+mypy:
+	mypy src
