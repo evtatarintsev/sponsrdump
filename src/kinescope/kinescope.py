@@ -1,12 +1,10 @@
-import tempfile
 from dataclasses import dataclass
-from enum import Enum, auto
 from pathlib import Path
 
+import httpx
 
-class KinescopeQuality(Enum):
-    "640x360"
-    THE_BEST = auto()
+from kinescope.master_mpd import MasterMpd
+from kinescope.quality import KinescopeQuality
 
 
 @dataclass
@@ -17,9 +15,15 @@ class KinescopeDownloads:
 
 
 class Kinescope:
+    headers={"Referer": "https://kinescope.io"}
+
     def __init__(self, quality: KinescopeQuality, dest_dir: Path):
         self.quality = quality
         self.dest_dir = dest_dir
 
     async def download(self, file_id: str) -> KinescopeDownloads:
+        async with httpx.AsyncClient(headers=self.headers) as client:
+            response = await client.get(f"https://kinescope.io/{file_id}/master.mpd")
+            mpd = MasterMpd(response.text)
+        print(mpd.video(self.quality))
         return KinescopeDownloads(video=Path(), audio=Path())

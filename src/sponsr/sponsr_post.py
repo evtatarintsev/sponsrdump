@@ -10,7 +10,7 @@ class SponsrPostPreview:
         self.html: Final[str] = html
 
     def video_ids(self) -> list[str]:
-        soup = BeautifulSoup(self.html)
+        soup = BeautifulSoup(self.html, "lxml")
         mpds = []
         iframes_src = [f["src"] for f in soup.find_all("iframe")]
         video_src = [src for src in iframes_src if "video" in src]

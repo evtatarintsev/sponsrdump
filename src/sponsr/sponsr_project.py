@@ -6,7 +6,7 @@ class SponsrProjectPage:
         self.html: Final[str] = html
 
     def project_id(self) -> int:
-        soup = BeautifulSoup(self.html)
+        soup = BeautifulSoup(self.html, "lxml")
         tags = soup.find_all(id='project_id')
         if not tags:
             raise Exception("tag with project_id not found on project page")
