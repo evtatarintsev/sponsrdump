@@ -37,3 +37,9 @@ testpaths = [
 [tool.mypy]
 python_version = "3.13"
 strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    "kinescope.master_mpd"
+]
+disable_error_code = ["import-untyped"]

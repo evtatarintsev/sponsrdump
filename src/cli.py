@@ -6,10 +6,10 @@ import click
 
 from downloader import Downloader
 from ffmpeg.ffmpeg import FFmpeg
-from kinescope.kinescope import Kinescope, KinescopeQuality
+from kinescope.kinescope import Kinescope
+from kinescope.quality import KinescopeQuality
 from sponsr.sponsr_auth import SponsrAuth
 from sponsr.sponsr_grabber import SponsrGrabber
-from sponsr.sponsr_post import SponsrPostPreview
 
 
 @click.group("dump")
