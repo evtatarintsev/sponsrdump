@@ -18,7 +18,7 @@ class MasterMpd:
         self.audio_adaptation_set = mime_types["audio/mp4"]
 
     def audio(self) -> list[str]:
-        representation = max(self.video_adaptation_set.representations, key=lambda r: int(r.audio_sampling_rate or 0))
+        representation = max(self.audio_adaptation_set.representations, key=lambda r: int(r.audio_sampling_rate or 0))
         base_url = representation.base_urls[0].base_url_value.strip()
 
         media_urls = [urljoin(base_url, segment_url.media) for segment_url in

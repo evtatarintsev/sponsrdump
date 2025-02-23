@@ -39,8 +39,5 @@ class TestMasterMpd:
         mpd = MasterMpd(xml)
 
         assert mpd.audio() == [
-            'https://edge-ams-1.kinescopecdn.net/3e324c4c-4135-42a7-a393-6399d9062f6c/videos/c688e141-7f66-4e8e-b822-f53498ef6c95/assets/019515ce-9070-7c0f-b017-a54157b3ad2f/0/78883700/480p.mp4?kinescope_project_id=0683e0d0-cd8b-4760-996b-80b002fd64d7&kcd=AAAAAABAr0A',
-            'https://edge-ams-1.kinescopecdn.net/3e324c4c-4135-42a7-a393-6399d9062f6c/videos/c688e141-7f66-4e8e-b822-f53498ef6c95/assets/019515ce-9070-7c0f-b017-a54157b3ad2f/78883700/157306991/480p.mp4?kinescope_project_id=0683e0d0-cd8b-4760-996b-80b002fd64d7&kcd=AAAAAABAr0A',
-            'https://edge-ams-1.kinescopecdn.net/3e324c4c-4135-42a7-a393-6399d9062f6c/videos/c688e141-7f66-4e8e-b822-f53498ef6c95/assets/019515ce-9070-7c0f-b017-a54157b3ad2f/157306991/190039634/480p.mp4?kinescope_project_id=0683e0d0-cd8b-4760-996b-80b002fd64d7&kcd=AAAAAABAr0A',
-            'https://edge-ams-1.kinescopecdn.net/3e324c4c-4135-42a7-a393-6399d9062f6c/videos/c688e141-7f66-4e8e-b822-f53498ef6c95/assets/019515ce-9070-7c0f-b017-a54157b3ad2f/157306991/190039634/480p.mp4?kinescope_project_id=0683e0d0-cd8b-4760-996b-80b002fd64d7&kcd=AAAAAACgnkA'
+            'https://edge-ams-1.kinescopecdn.net/3e324c4c-4135-42a7-a393-6399d9062f6c/videos/c688e141-7f66-4e8e-b822-f53498ef6c95/assets/019515ca-1f90-74b4-8502-ec869131fe26/audio_0.mp4?kinescope_project_id=0683e0d0-cd8b-4760-996b-80b002fd64d7'
         ]

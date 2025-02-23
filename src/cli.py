@@ -36,6 +36,7 @@ def video(url: str, dest_dir: str, auth: str) -> None:
             ),
             FFmpeg(),
             Path(dest_dir),
+            concurrency=5,
         )
         asyncio.run(downloader.download(url))
 

@@ -25,5 +25,20 @@ class Kinescope:
         async with httpx.AsyncClient(headers=self.headers) as client:
             response = await client.get(f"https://kinescope.io/{file_id}/master.mpd")
             mpd = MasterMpd(response.text)
-        print(mpd.video(self.quality))
-        return KinescopeDownloads(video=Path(), audio=Path())
+
+        video_file = self.dest_dir / f"{file_id}.video.mp4"
+        with video_file.open("wb") as vf:
+            async with httpx.AsyncClient(headers=self.headers) as client:
+                for url in mpd.video(self.quality):
+                    response = await client.get(url)
+                    vf.write(response.content)
+
+        audio_file = self.dest_dir / f"{file_id}.audio.mp4"
+        with audio_file.open("wb") as af:
+            async with httpx.AsyncClient(headers=self.headers) as client:
+                for url in mpd.audio():
+                    response = await client.get(url)
+                    af.write(response.content)
+
+
+        return KinescopeDownloads(video=video_file, audio=audio_file)
