@@ -55,4 +55,4 @@ class SponsrGrabber:
                 total_posts = data["rows_count"]
                 posts += [SponsrPostsApiPost.from_dict(d) for d in data["rows"]]
 
-        return [SponsrPostPreview(post.post_title, post.post_text) for post in reversed(posts)]
+        return [SponsrPostPreview(post.post_id, post.post_title, post.post_text) for post in reversed(posts)]

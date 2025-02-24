@@ -1,11 +1,12 @@
-from typing import Final
+from typing import Final, TypeAlias
 from urllib.parse import parse_qs, urlparse
 
 from bs4 import BeautifulSoup
 
 
 class SponsrPostPreview:
-    def __init__(self, title: str, html: str) -> None:
+    def __init__(self, id: int, title: str, html: str) -> None:
+        self.id = id
         self.title: Final[str] = title
         self.html: Final[str] = html
 

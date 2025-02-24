@@ -21,9 +21,14 @@ def cli() -> None:
 @click.option("--url", "-url", required=True, help='URL видео на test_sponsr.ru.')
 @click.option('--dest-dir', "-d",
               type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True),
-              help="Директория для загрузки файла")
-@click.option('--auth', "-a", required=True, type=click.Path(exists=True, file_okay=True, dir_okay=False))
-def video(url: str, dest_dir: str, auth: str) -> None:
+              help="Директория для загрузки файла.")
+@click.option('--auth', "-a", required=True,
+              type=click.Path(exists=True, file_okay=True, dir_okay=False),
+              help="Файл с сохраненными cookie для авторизации.")
+@click.option('--progress', "-p", required=True,
+              type=click.Path(file_okay=True, dir_okay=False),
+              help="Файл для хранения прогресса скачивания.")
+def video(url: str, dest_dir: str, auth: str, progress: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
     with tempfile.TemporaryDirectory() as temp_dir:
         downloader = Downloader(
@@ -36,6 +41,7 @@ def video(url: str, dest_dir: str, auth: str) -> None:
             ),
             FFmpeg(),
             Path(dest_dir),
+            Path(progress),
             concurrency=5,
         )
         asyncio.run(downloader.download(url))
