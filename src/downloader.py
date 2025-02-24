@@ -64,11 +64,10 @@ class Downloader:
 
 @contextmanager
 def progress_logger(file: Path) -> Generator[set[int]]:
+    ready_ids: set[int] = set()
     if file.exists():
         with file.open() as f:
-            ready_ids: set[int] = {int(line) for line in f.readlines()}
-    else:
-        ready_ids: set[int] = set()
+            ready_ids = {int(line) for line in f.readlines()}
 
     try:
         yield ready_ids
