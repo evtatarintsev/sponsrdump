@@ -1,6 +1,7 @@
 from typing import TypeVar, Generator
 from urllib.parse import urljoin
 
+from mpegdash.nodes import Representation
 from mpegdash.parser import MPEGDASHParser
 
 from kinescope.quality import KinescopeQuality
@@ -27,13 +28,18 @@ class MasterMpd:
         return list(without_duplicates(media_urls))
 
     def video(self, quality: KinescopeQuality) -> list[str]:
-        representation = max(self.video_adaptation_set.representations, key=lambda r: r.width)
+        representation = self.find_video_representation(quality)
+
         base_url = representation.base_urls[0].base_url_value.strip()
 
         media_urls = [urljoin(base_url, segment_url.media) for segment_url in
                       representation.segment_lists[0].segment_urls]
 
         return list(without_duplicates(media_urls))
+
+    def find_video_representation(self, quality: KinescopeQuality) -> Representation:
+        sorted_representations = sorted(self.video_adaptation_set.representations, key=lambda r: r.height)
+        return min(sorted_representations, key=lambda r: 0 if r.height == quality else 1)
 
 
 T = TypeVar("T")

@@ -60,6 +60,8 @@ class Downloader:
         for i, video_id in enumerate(post.video_ids()):
             downloads = await self.kinescope.download(video_id)
             self.ffmpeg.concat(downloads.video, downloads.audio, self.filename(post, i))
+            downloads.video.unlink()
+            downloads.audio.unlink()
 
 
 @contextmanager

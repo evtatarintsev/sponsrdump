@@ -28,7 +28,10 @@ def cli() -> None:
 @click.option('--progress', "-p", required=True,
               type=click.Path(file_okay=True, dir_okay=False),
               help="Файл для хранения прогресса скачивания.")
-def video(url: str, dest_dir: str, auth: str, progress: str) -> None:
+@click.option('--quality', "-q", required=True,
+              type=click.Choice([str(q) for q in KinescopeQuality]),
+              help="Качество")
+def video(url: str, dest_dir: str, auth: str, progress: str, quality: str) -> None:
     """Сохраняет видео по указанному url в директорию dest."""
     with tempfile.TemporaryDirectory() as temp_dir:
         downloader = Downloader(
@@ -36,7 +39,7 @@ def video(url: str, dest_dir: str, auth: str, progress: str) -> None:
                 SponsrAuth(Path(auth))
             ),
             Kinescope(
-                KinescopeQuality.THE_BEST,
+                KinescopeQuality(int(quality)),
                 Path(temp_dir)
             ),
             FFmpeg(),

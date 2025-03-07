@@ -1,5 +1,8 @@
-from enum import Enum, auto
+from enum import IntEnum
 
 
-class KinescopeQuality(Enum):
-    THE_BEST = auto()
+class KinescopeQuality(IntEnum):
+    p360 = 360
+    p480 = 480
+    p720 = 720
+    p1080 = 1080
